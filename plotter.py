@@ -10,14 +10,16 @@ def unpack(ntupl):
 prots = ['S', 'K', 'L', 'V']
 media = ['elastin', 'gelatin']
 
-trials = itertools.product(itertools.permutations(prots[:2]),media)
+titlefmt    = 'cat%s eats cat%s on %s'
+filenamefmt = 'data.%s.%s.%s.csv'
+trials = itertools.product(itertools.permutations(prots[:2]), media)
 for ntupl in trials:
     print(ntupl)
     tupl = unpack(ntupl)
     print(tupl)
     #---- Load up some data ----#
-    filename = 'data.%s.%s.%s.csv'%tupl
-    title = 'cat%s eats cat%s on %s' % tupl
+    filename = filenamefmt % tupl
+    title = titlefmt % tupl
     df = pd.read_csv(filename)
     data_frame = df[['timevals', 'data']].set_index('timevals')
     model_frame = df[['time (min)', 'model']].set_index('time (min)')
@@ -28,12 +30,12 @@ for ntupl in trials:
     plt.xlabel('time (minutes)')
     plt.ylabel('concentartion (M)')
     plt.savefig('plot.model.%s.%s.%s.png' % tupl)
-    plt.figure()
 
     #----- Computing the residuals from the model to the data ----#
     # we need to fix the fact that experiment and model do not 
     # have the same index. So we fill and then subtract, then discard the
     # filled in values.
+    plt.figure()
     diffs = joined.fillna().T.diff().T
     valid_indices = joined['data'].dropna().index
     resid = pd.Series(diffs.ix[valid_indices]['model'], name='residuals')
