@@ -21,7 +21,7 @@ for ntupl in trials:
     df = pd.read_csv(filename)
     data_frame = df[['timevals', 'data']].set_index('timevals')
     model_frame = df[['time (min)', 'model']].set_index('time (min)')
-    
+
     # ---- Show how the model compares to the actual data ----#
     joined = data_frame.join(model_frame, how='outer')
     joined.plot(style={'data':'k+', 'model':'-'}, title=title)
@@ -29,11 +29,16 @@ for ntupl in trials:
     plt.ylabel('concentartion (M)')
     plt.savefig('plot.model.%s.%s.%s.png' % tupl)
     plt.figure()
-    
+
     #----- Computing the residuals from the model to the data ----#
-    resid = pd.Series(joined.fillna().T.diff().T.ix[joined.data.dropna().index]['model'], name='residuals')
+    # we need to fix the fact that experiment and model do not 
+    # have the same index. So we fill and then subtract, then discard the
+    # filled in values.
+    diffs = joined.fillna().T.diff().T
+    valid_indices = joined['data'].dropna().index
+    resid = pd.Series(diffs.ix[valid_indices]['model'], name='residuals')
     resid.plot(title=title)
-    plt.plot(np.arange(120),np.zeros(120),'k-', )
+    plt.plot(np.arange(120), np.zeros(120), 'k-', )
     plt.legend(); 
     plt.xlabel('time (minutes)')
     plt.ylabel('concentartion (M)')
