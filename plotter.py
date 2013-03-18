@@ -1,3 +1,4 @@
+from __future__ import print_function
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -11,7 +12,9 @@ media = ['elastin', 'gelatin']
 
 trials = itertools.product(itertools.permutations(prots[:2]),media)
 for ntupl in trials:
+    print(ntupl)
     tupl = unpack(ntupl)
+    print(tupl)
     #---- Load up some data ----#
     filename = 'data.%s.%s.%s.csv'%tupl
     title = 'cat%s eats cat%s on %s' % tupl
