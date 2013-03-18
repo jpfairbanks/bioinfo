@@ -32,14 +32,14 @@ for fname in files:
     tupl = components[1:-1]
     print(tupl)
     #---- Load up some data ----#
-    title = titlefmt % (str(tupl[:-1]), tuple[-1])
+    title = titlefmt % (str(tupl[:-1]), tupl[-1])
     df = pd.read_csv(fname)
     data_frame = df[['timevals', 'data']].set_index('timevals')
     model_frame = df[['time (min)', 'model']].set_index('time (min)')
 
     # ---- Show how the model compares to the actual data ----#
     joined = data_frame.join(model_frame, how='outer')
-    joined.plot(style={'data':'k+', 'model':'-'}, title=title)
+    joined.plot(style={'data':'ko', 'model':'-'}, title=title)
     plt.xlabel('time (minutes)')
     plt.ylabel('concentartion (M)')
     plt.savefig('plot.model.%spng' % tuple_repr(tupl))
@@ -52,7 +52,7 @@ for fname in files:
     diffs = joined.fillna().T.diff().T
     valid_indices = joined['data'].dropna().index
     resid = pd.Series(diffs.ix[valid_indices]['model'], name='residuals')
-    resid.plot(title=title)
+    resid.plot(kind='bar', title=title)
     plt.plot(np.arange(length), np.zeros(length), 'k-', )
     plt.legend(); 
     plt.xlabel('time (minutes)')
