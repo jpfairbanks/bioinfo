@@ -8,7 +8,7 @@ Reads from some CSV files and makes a bunch of residual plots
 The most important step is resolving the different indices.
 
 ### Data Format
-The data should be in a comma seperated values file. In the following format.
+The data should be in a comma separated values file. In the following format.
 It can be exported from Excel.
 experimental_times, experimental_data,blank,time(secs),time(mins),model_data
 
