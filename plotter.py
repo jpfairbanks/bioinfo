@@ -1,4 +1,5 @@
 from __future__ import print_function
+import math
 import os.path as path
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -55,9 +56,18 @@ def process_file(fname):
     # have the same index. So we fill and then subtract, then discard the
     # filled in values.
     if args.residuals:
+	if args.verbose:
+	    print('starting residuals')
         plt.figure()
         diffs = joined.fillna().T.diff().T
         valid_indices = joined[data_col].dropna().index
+	if args.verbose:
+	    print(valid_indices[-1])
+	    print(type(valid_indices[-1]))
+	if math.isnan(valid_indices[-1]):
+	    print('we hit a nan')
+	    valid_indices = valid_indices[0:-1]
+	    print(valid_indices) 
         resid = pd.Series(diffs.ix[valid_indices]['model'], name='residuals')
         resid.plot(kind='bar', title=title)
         plt.plot(np.arange(length), np.zeros(length), 'k-', )
@@ -86,4 +96,8 @@ if __name__ == "__main__":
     filenamefmt = 'data.%scsv'
     #files = ['data.K.S.elastin.csv']
     for fname in args.files:
-        df = process_file(fname)
+	try:
+            df = process_file(fname)
+	except Exception as e:
+	    print('we failed to process file: %s'%fname)
+	    print(e)
