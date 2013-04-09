@@ -1,8 +1,11 @@
+import argparse
 import numpy as np
 import numpy.random as rand
+import numpy.linalg as LA
 import scipy 
 import pandas as pd
 import matplotlib.pyplot as plt
+import itertools as itt
 
 def vprint(name,obj):
     """Prints obj as a well formatted string
