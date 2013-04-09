@@ -51,7 +51,18 @@ def orders_of_magnitue(arg1):
         ])
     return 10**P
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-v", "--verbose", action="count")
+    parser.add_argument("-p", "--plot", action="store_true")
+    parser.add_argument("-g", "--gen", action="store_true")
+    parser.add_argument("-s", "--solve", action="store_true")
+    #parser.add_argument("files", nargs="+")
+    args = parser.parse_args()
+    return args
+
 if __name__ == '__main__':
+    args = get_args()
     d = 5
     NUM_T = 25
     MAX_T = 1.0
